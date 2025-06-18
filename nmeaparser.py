@@ -41,7 +41,7 @@ def readUART(serialPort, baud):
             print('Parse error: {}'.format(e))
             continue
 
-def createNMEA(lat, lon, alt):   
+def createNMEAGGA(lat, lon, alt):   
     lat_dir = 'N' if lat >= 0 else 'S'
     lon_dir = 'E' if lon >= 0 else 'W'
     
@@ -68,10 +68,9 @@ def createNMEA(lat, lon, alt):
     gga = pynmea2.GGA(
         'GP', 'GGA', (date_time , str(lat), lat_dir,  str(lon), lon_dir, "1", "10", "1.0", str(alt), "M", "", "M", "",  "")   
     )
-    
     return str(gga)
     
-# msg = createNMEA(123, 123, 0)
+# msg = createNMEAGGA(123, 123, 0)
 # print(msg)
 # msg = parseNMEA(msg)
 # # print(repr(msg))
