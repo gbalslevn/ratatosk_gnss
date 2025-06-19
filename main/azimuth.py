@@ -15,7 +15,7 @@ def calculateAzimuth(lat1, lon1, lat2, lon2):
     
     return (azimuth + 360) % 360  # Normalize to 0-360 degrees
 
-# Coordinates lat1, lon1 is the location which points to north on setup. 
+# Coordinates lat1, lon1 is the current location and lat2, lon2 is the location pointed to
 # lat1, lon1 = 56.160052, 10.204373 
 # lat2, lon2 = 56.159995, 10.204405 
 # azimuth = get_azimuth(lat1, lon1, lat2, lon2)

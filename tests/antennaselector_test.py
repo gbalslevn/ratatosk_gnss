@@ -1,13 +1,12 @@
-from nmeaparser import createNMEAGGA, parseNMEA
-from azimuth import calculateAzimuth
-from tilt import calculateTilt
 import random
 import math
+from tests.nmeaparser_test import createNMEAGGA
+from main.antennaselector import getCorrectAntenna, getTilt, getAzimuth
 
 balloon_location = {"lat": 56.169200, "lon" : 10.202600, "alt": 39000.000000}
 groundstation_location = {"lat": balloon_location["lat"], "lon" : balloon_location["lon"]-0.1, "alt": balloon_location["alt"]} # West of the balloon
 groundstation_NMEA = createNMEAGGA(groundstation_location["lat"], groundstation_location["lon"], 0.000000)
-
+print(groundstation_NMEA)
 def getRandomBalloonNMEA():
     point1 = getRandomLocationOffset(balloon_location)
     point2 = getRandomLocationOffset(balloon_location)
@@ -21,35 +20,6 @@ def getRandomLocationOffset(location):
     alt_randomness = random.randint(1, 10)/100000
     offsetLocation = {"lat": location["lat"] - lat_randomness, "lon": location["lon"] - lon_randomness, "alt": location["alt"] - alt_randomness}
     return offsetLocation
-
-# Get azimuth based on two nmea points
-def getAzimuth(point1_NMEA, point2_NMEA): 
-    point1 = parseNMEA(point1_NMEA)   
-    point2 = parseNMEA(point2_NMEA) 
-    azimuth = calculateAzimuth(float(point1.lat), float(point1.lon), float(point2.lat), float(point2.lon))
-    return azimuth
-
-# Get tilt based on two nmea points
-def getTilt(point1_NMEA, point2_NMEA):
-    point1 = parseNMEA(point1_NMEA)   
-    point2 = parseNMEA(point2_NMEA) 
-    tilt = calculateTilt(float(point1.lat), float(point1.lon), float(point1.altitude), float(point2.lat), float(point2.lon), float(point2.altitude))
-    return tilt
-
-def getClosestCardinal(degree):
-    closest = 360
-    correctCardinal = 0
-    cardinals = [0, 90, 180, 270, 360]
-    for cardinal in cardinals:
-        if abs(cardinal - degree) < closest:
-            closest = abs(cardinal - degree)
-            correctCardinal = cardinal
-    cardinalMap = {0: "N", 90: "E", 180: "S", 270: "W", 360: "N"}
-    return cardinalMap.get(correctCardinal)
-
-def mapCardinalToAntenna(cardinal):
-    antennaMap = {"N": 1, "E": 2, "S": 3, "W": 4}
-    return antennaMap.get(cardinal)
 
 def draw_groundstation_compass(angle):
     angle = angle % 360  
@@ -106,18 +76,6 @@ def draw_balloon_compass(angle, tilt):
     print(compass_string)
     print(f"Ballon rotated by: {int(angle)}°")
     print(f"Ballon tilt is: {float(tilt)}°")
-    
-def getCorrectAntenna(balloon_rotation, groundstation_direction, draw=True):
-    # We need to place the 4 patch antennas A1, A2, A3, A4 such that A1 corrosponds to north/(front), A2 to east/(right) and so on.
-    if draw:
-        balloon_tilt = 0
-        draw_groundstation_compass(groundstation_direction) 
-        draw_balloon_compass(balloon_rotation, balloon_tilt) 
-        
-    corrected_direction = (groundstation_direction - balloon_rotation) % 360 # Correcting for the balloon rotation
-    closestCardinal = getClosestCardinal(corrected_direction)
-    correctAntenna = mapCardinalToAntenna(closestCardinal)
-    return correctAntenna
 
 def testAntennaChoice():
     # The groundstation is east of the balloon, the correct antenna will be chosen based on the rotation of the balloon. 
@@ -143,13 +101,15 @@ def testAntennaChoice():
     assert getCorrectAntenna(ballon_rotation, groundstation_direction, False) == 2
     
     print("Passed tests for choosing correct antenna")
-    
-testAntennaChoice()
 
+testAntennaChoice()
 # Get random values and calculate correct antenna
 point1_NMEA, point2_NMEA = getRandomBalloonNMEA()
-balloon_rotation = 75.5664
+balloon_rotation = random.randrange(0, 360)
 balloon_tilt = getTilt(point1_NMEA, point2_NMEA)
 groundstation_direction = getAzimuth(point1_NMEA, groundstation_NMEA)
 correctAntenna = getCorrectAntenna(balloon_rotation, groundstation_direction)
+
+draw_groundstation_compass(groundstation_direction) 
+draw_balloon_compass(balloon_rotation, balloon_tilt) 
 print(f"You should use antenna {correctAntenna}")

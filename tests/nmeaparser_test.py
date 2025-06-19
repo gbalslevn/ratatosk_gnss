@@ -1,13 +1,5 @@
 import pynmea2
-import io
-import serial
 from datetime import datetime
-
-# https://github.com/Knio/pynmea2
-
-def parseNMEA(data):
-    msg = pynmea2.parse(data)
-    return msg
 
 def readFile(path):
     file = open(path, "r")
@@ -15,28 +7,12 @@ def readFile(path):
     for line in file.readlines():
         try:
             msg = pynmea2.parse(line)
-            print(repr(msg))
+            #print(repr(msg))
             if hasattr(msg, "latitude") and hasattr(msg, "longitude"):
                 print(f"NMEA {msg.sentence_type} DATA")
                 print(f'Lat: {msg.latitude}, Long: {msg.longitude}')
             if hasattr(msg, "altitude"):
                 print(f'Alt: {msg.altitude}')
-        except pynmea2.ParseError as e:
-            print('Parse error: {}'.format(e))
-            continue
-
-def readUART(serialPort, baud):
-    ser = serial.Serial(serialPort, baud, timeout=5.0)
-    sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
-
-    while 1:
-        try:
-            line = sio.readline()
-            msg = pynmea2.parse(line)
-            print(repr(msg))
-        except serial.SerialException as e:
-            print('Device error: {}'.format(e))
-            break
         except pynmea2.ParseError as e:
             print('Parse error: {}'.format(e))
             continue
@@ -71,10 +47,7 @@ def createNMEAGGA(lat, lon, alt):
     return str(gga)
     
 # msg = createNMEAGGA(123, 123, 0)
-# print(msg)
-# msg = parseNMEA(msg)
 # # print(repr(msg))
 # assert msg.lat == "123"
 # assert msg.lon == "123"
 # readFile("NMEA_data/nmea.txt")
-# readUART("dev/ttyUSB0", 115200)
