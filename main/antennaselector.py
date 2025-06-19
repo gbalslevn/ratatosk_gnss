@@ -31,9 +31,9 @@ def mapCardinalToAntenna(cardinal):
     antennaMap = {"N": 1, "E": 2, "S": 3, "W": 4}
     return antennaMap.get(cardinal)
     
-def getCorrectAntenna(balloon_rotation, groundstation_direction, draw=True):
+def getCorrectAntenna(balloon_rotation, groundstation_direction):
     # We need to place the 4 patch antennas A1, A2, A3, A4 such that A1 corrosponds to north/(front), A2 to east/(right) and so on.
-    corrected_direction = (groundstation_direction - balloon_rotation) % 360 # Correcting for the balloon rotation
+    corrected_direction = (groundstation_direction - float(balloon_rotation)) % 360 # Correcting for the balloon rotation
     closestCardinal = getClosestCardinal(corrected_direction)
     correctAntenna = mapCardinalToAntenna(closestCardinal)
     return correctAntenna
