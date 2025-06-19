@@ -59,6 +59,6 @@ def selectAntenna(antenna):
 def selectAntenna_test(antenna):
     print(f"Groundstation direction: {groundstation_direction}")
     print(f"Balloon rotation: {balloon_rotation}") 
-    print(f"Balloon tilt: {balloon_tilt}") 
+    print(f"Balloon location: {balloon_lat} : {balloon_lon}")
     print(f"You should use antenna {antenna}")
 readUART("/dev/ttyACM0", 115200)
