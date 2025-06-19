@@ -30,7 +30,7 @@ The fomula for calculating rotation: https://www.omnicalculator.com/other/azimut
 1. Create the virtual environment `python3 -m venv venv`
 2. Activate the virtual environment `source venv/bin/activate`
 3. Install the required packages `python3 -m pip install -r requirements.txt` (use `py` instead of `python3` on windows) 
-4. Add user to allow reading serial: `sudo usermod -a -G dialout $USER` (For Linux, if on Windows or MacOS figure out how to access serial)
+4. Add user to allow reading serial: `sudo usermod -a -G dialout $USER`, then restart (For Linux, if on Windows or MacOS figure out how to access serial)
 5. run with `python3 -m main.nmeaparser`
 
 ## Updating dependencies
