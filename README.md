@@ -6,7 +6,8 @@ Out of 4 possible antennas the one pointing the most directly to the groundstati
 
 ![balloon_rotation](balloon_rotation.png)
 
-The 4 patch antennas 1, 2, 3, 4 should initially be placed such that 1 points to north/(front), 2 to east/(right) and so on. On initital placement the heading is of course 0°. If the groundstation is located west (270°) of the balloon antenna 4 is chosen. 
+The 4 patch antennas A1, A2, A3, A4 should initially be placed such that 1 points to north/(front), 2 to east/(right) and so on. On initital placement if heading is 0° and the groundstation is located 270° relative to the balloon, antenna 4 is chosen. 
+
 
 If the balloon then rotates s.t. the heading is 140° we calculate 
 
@@ -20,7 +21,9 @@ $$
 (270 - 140) \mod 360 =130 
 $$
 
-Based on the initial placement of antennas configured for the cardinal directions we can see the heading 130° is closer to 90° than 180° meaning we choose antenna 2.  
+Based on the initial placement of antennas configured for the cardinal directions we can see the heading 130° is closer to 90° than 180° meaning we choose antenna 2. If two antennas has the exact same distance to being the correct one, the one currently not selected is chosen.  
+
+It should be calibrated where our north is. Meaning if A1 is located at \theta_A1 we know A2=\theta_A1 + 90 mod 360, A3=\theta_A1 + 180 mod 360 and so on
 
 
 

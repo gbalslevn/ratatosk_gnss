@@ -83,22 +83,23 @@ def testAntennaChoice():
     groundstation_direction = 90
     
     ballon_rotation = 0
-    assert getCorrectAntenna(ballon_rotation, groundstation_direction, False) == 2
+    print(getCorrectAntenna(ballon_rotation, groundstation_direction))
+    assert getCorrectAntenna(ballon_rotation, groundstation_direction) == 2
     
     ballon_rotation = 90
-    assert getCorrectAntenna(ballon_rotation, groundstation_direction, False) == 1
+    assert getCorrectAntenna(ballon_rotation, groundstation_direction) == 1
     
     ballon_rotation = 180
-    assert getCorrectAntenna(ballon_rotation, groundstation_direction, False) == 4
+    assert getCorrectAntenna(ballon_rotation, groundstation_direction) == 4
     
     ballon_rotation = 270
-    assert getCorrectAntenna(ballon_rotation, groundstation_direction, False) == 3
+    assert getCorrectAntenna(ballon_rotation, groundstation_direction) == 3
     
     ballon_rotation = 360
-    assert getCorrectAntenna(ballon_rotation, groundstation_direction, False) == 2
+    assert getCorrectAntenna(ballon_rotation, groundstation_direction) == 2
     
     ballon_rotation = 316
-    assert getCorrectAntenna(ballon_rotation, groundstation_direction, False) == 2
+    assert getCorrectAntenna(ballon_rotation, groundstation_direction) == 2
     
     print("Passed tests for choosing correct antenna")
 

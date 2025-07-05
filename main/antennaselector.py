@@ -16,24 +16,20 @@ def getTilt(point1_NMEA, point2_NMEA):
     tilt = calculateTilt(float(point1.lat), float(point1.lon), float(point1.altitude), float(point2.lat), float(point2.lon), float(point2.altitude))
     return tilt
 
-def getClosestCardinal(degree):
-    closest = 360
-    correctCardinal = 0
-    cardinals = [0, 90, 180, 270, 360]
-    for cardinal in cardinals:
-        if abs(cardinal - degree) < closest:
-            closest = abs(cardinal - degree)
-            correctCardinal = cardinal
-    cardinalMap = {0: "N", 90: "E", 180: "S", 270: "W", 360: "N"}
-    return cardinalMap.get(correctCardinal)
-
-def mapCardinalToAntenna(cardinal):
-    antennaMap = {"N": 1, "E": 2, "S": 3, "W": 4}
-    return antennaMap.get(cardinal)
+def getAntennaDirection(antenna_1_direction, antenna_number):
+    return (antenna_1_direction + 90 * (antenna_number - 1)) % 360
     
+# Finds correct antenna. Balloon rotation is the direction which patch antenna A1 points to. The locations of the other antennas are calculated based on that. 
 def getCorrectAntenna(balloon_rotation, groundstation_direction):
-    # We need to place the 4 patch antennas A1, A2, A3, A4 such that A1 corrosponds to north/(front), A2 to east/(right) and so on.
-    corrected_direction = (groundstation_direction - float(balloon_rotation)) % 360 # Correcting for the balloon rotation
-    closestCardinal = getClosestCardinal(corrected_direction)
-    correctAntenna = mapCardinalToAntenna(closestCardinal)
+    closest = 360
+    antenna1 = {"number": 1, "degree": balloon_rotation}
+    antenna2 = {"number": 2 , "degree": getAntennaDirection(balloon_rotation, 2)}
+    antenna3 = {"number": 3, "degree": getAntennaDirection(balloon_rotation, 3)}
+    antenna4 = {"number": 4, "degree": getAntennaDirection(balloon_rotation, 4)}
+    antennas = [antenna1, antenna2, antenna3, antenna3, antenna4]
+    correctAntenna = antenna1["number"]
+    for antenna in antennas:
+        if(abs(antenna["degree"] - groundstation_direction) <= closest): # = as, if same distance, choose new antenna
+            correctAntenna = antenna["number"]
+            closest = abs(antenna["degree"] - groundstation_direction)
     return correctAntenna

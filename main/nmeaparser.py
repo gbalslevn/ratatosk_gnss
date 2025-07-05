@@ -8,8 +8,8 @@ from .azimuth import calculateAzimuth
 # tracker = BalloonTracker(groundstation_lat=56.1692, groundstation_lon=10.1026)
 # tracker.readUART('/dev/ttyUSB0', 115200)
 
-groundstation_lat = 56.1692
-groundstation_lon = 10.1026
+GROUNDSTATION_LAT = 56.1692
+GROUNDSTATION_LON = 10.1026
 balloon_lat = 0
 balloon_lon = 0
 balloon_rotation = 0
@@ -21,7 +21,7 @@ correctAntenna = 1
 # Constantly reads from serial
 def readUART(serialPort, baud):
     global balloon_lat, balloon_lon, balloon_rotation, groundstation_direction, correctAntenna 
-    ser = serial.Serial(serialPort, baud, timeout=5) # Read from serial every 5 seconds
+    ser = serial.Serial(serialPort, baud, timeout=1) # Read from serial every second
     sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
 
     while 1:
@@ -39,7 +39,7 @@ def readUART(serialPort, baud):
             if hasattr(msg, "altitude"):
                 altitude = msg.altitude
                 
-            groundstation_direction = calculateAzimuth(float(balloon_lat), float(balloon_lon), float(groundstation_lat), float(groundstation_lon))
+            groundstation_direction = calculateAzimuth(float(balloon_lat), float(balloon_lon), float(GROUNDSTATION_LAT), float(GROUNDSTATION_LON))
             correctAntenna = getCorrectAntenna(balloon_rotation, groundstation_direction)
             selectAntenna_test(correctAntenna)
         except serial.SerialException as e:
