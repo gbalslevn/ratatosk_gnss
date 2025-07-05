@@ -1,6 +1,6 @@
 import math
 
-# Calculate distance (on a sphere) between two points
+# Calculate distance (on a sphere) between two points. Usefull for distances > 1km. 
 def haversine(lat1, lon1, lat2, lon2):
     lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
 
@@ -11,7 +11,7 @@ def haversine(lat1, lon1, lat2, lon2):
     earthRadius = 6371 * 1000 
     return earthRadius * c
 
-# Calculate distance, flat earth approach, can be assumed for small distances. 
+# Calculate distance, flat earth approach, can be assumed for small distances < 1km. 
 def euclidean_distance(lat1, lon1, lat2, lon2):
     distance_sqaured = (lat2 - lat1) ** 2 + (lon2 - lon1) ** 2   
     distance = math.sqrt(distance_sqaured)
@@ -19,9 +19,9 @@ def euclidean_distance(lat1, lon1, lat2, lon2):
 
 def calculateTilt(lat1, lon1, alt1, lat2, lon2, alt2):
     horizontal_distance = euclidean_distance(lat1, lon1, lat2, lon2)
-    delta_z = alt2 - alt1
+    delta_alt = alt2 - alt1
 
-    tilt_rad = math.atan2(delta_z, horizontal_distance)
+    tilt_rad = math.atan2(delta_alt, horizontal_distance)
     tilt_deg = math.degrees(tilt_rad)
     return tilt_deg
 

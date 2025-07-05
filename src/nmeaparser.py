@@ -1,8 +1,9 @@
 import pynmea2
 import io
 import serial
-from .antennaselector import getCorrectAntenna
-from .azimuth import calculateAzimuth
+import datetime
+from antennaselector import getCorrectAntenna
+from azimuth import calculateAzimuth
 
 # Maybe rewrite to class instead, avoid weird global variable inside method
 # tracker = BalloonTracker(groundstation_lat=56.1692, groundstation_lon=10.1026)
@@ -23,12 +24,11 @@ def readUART(serialPort, baud):
     global balloon_lat, balloon_lon, balloon_rotation, groundstation_direction, correctAntenna 
     ser = serial.Serial(serialPort, baud, timeout=1) # Read from serial every second
     sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
-
+    log_filename = f"../logs/{datetime.datetime.now().strftime('%y-%d-%m_%H%M')}.txt"
+    
     while 1:
         try:
             line = sio.readline()
-            with open("nmea_log.txt", "a") as log:
-                log.write(line)
             msg = pynmea2.parse(line)
             # print(repr(msg))
             if msg.sentence_type == "HDT" and msg.heading is not None:
@@ -42,6 +42,10 @@ def readUART(serialPort, baud):
             groundstation_direction = calculateAzimuth(float(balloon_lat), float(balloon_lon), float(GROUNDSTATION_LAT), float(GROUNDSTATION_LON))
             correctAntenna = getCorrectAntenna(balloon_rotation, groundstation_direction)
             selectAntenna_test(correctAntenna)
+            with open(log_filename, "a") as log:
+                log.write(line)
+                log.write(f"Balloon Rotation: {balloon_rotation}\n")
+                log.write(f"GS Direction: {groundstation_direction}\n")
         except serial.SerialException as e:
             print('Device error: {}'.format(e))
             ser.reset_input_buffer()
@@ -61,4 +65,6 @@ def selectAntenna_test(antenna):
     print(f"Balloon rotation: {balloon_rotation}") 
     print(f"Balloon location: {balloon_lat} : {balloon_lon}")
     print(f"You should use antenna {antenna}")
+
+# Remember to choose correct serial port and correct lat and lon for groundstation
 readUART("/dev/ttyACM0", 115200)

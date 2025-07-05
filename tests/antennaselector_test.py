@@ -1,12 +1,14 @@
 import random
 import math
-from tests.nmeaparser_test import createNMEAGGA
-from main.antennaselector import getCorrectAntenna, getTilt, getAzimuth
+from nmeaparser_test import createNMEAGGA
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+from antennaselector import getCorrectAntenna, getTilt, getAzimuth
 
 balloon_location = {"lat": 56.169200, "lon" : 10.202600, "alt": 39000.000000}
 groundstation_location = {"lat": balloon_location["lat"], "lon" : balloon_location["lon"]-0.1, "alt": balloon_location["alt"]} # West of the balloon
 groundstation_NMEA = createNMEAGGA(groundstation_location["lat"], groundstation_location["lon"], 0.000000)
-print(groundstation_NMEA)
 def getRandomBalloonNMEA():
     point1 = getRandomLocationOffset(balloon_location)
     point2 = getRandomLocationOffset(balloon_location)
@@ -19,6 +21,7 @@ def getRandomLocationOffset(location):
     lon_randomness = random.randint(1, 50)/100000
     alt_randomness = random.randint(1, 10)/100000
     offsetLocation = {"lat": location["lat"] - lat_randomness, "lon": location["lon"] - lon_randomness, "alt": location["alt"] - alt_randomness}
+    print(f"Offset location is: {offsetLocation}")
     return offsetLocation
 
 def draw_groundstation_compass(angle):
@@ -83,7 +86,6 @@ def testAntennaChoice():
     groundstation_direction = 90
     
     ballon_rotation = 0
-    print(getCorrectAntenna(ballon_rotation, groundstation_direction))
     assert getCorrectAntenna(ballon_rotation, groundstation_direction) == 2
     
     ballon_rotation = 90

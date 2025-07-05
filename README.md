@@ -33,12 +33,13 @@ The fomula for calculating rotation: https://www.omnicalculator.com/other/azimut
 1. Create the virtual environment `python3 -m venv venv`
 2. Activate the virtual environment `source venv/bin/activate`
 3. Install the required packages `python3 -m pip install -r requirements.txt` (use `py` instead of `python3` on windows) 
-4. Add user to allow reading serial: `sudo usermod -a -G dialout $USER`, then restart (For Linux, if on Windows or MacOS figure out how to access serial)
-5. run with `python3 -m main.nmeaparser`
+4. Add user to allow reading serial: `sudo usermod -a -G dialout $USER`, then restart (For Linux but not neccesary for raspberry pi dist of linux. If on Windows or MacOS figure out how to access serial)
+5. run with `python3 nmeaparser.py`
+
+Remember to set correct serial port and hardcode correct location of groundstation. 
 
 ## Updating dependencies
 Do `python3 -m pip freeze > requirements.txt`
 
 ## Tests
-Run tests from project root `python3 -m tests.antennaselector_test`
-This esnures python can see both main and tests package. 
+Run tests `python3 tests/antennaselector_test.py`

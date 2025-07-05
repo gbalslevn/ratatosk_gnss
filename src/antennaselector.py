@@ -1,6 +1,6 @@
 import pynmea2
-from main.azimuth import calculateAzimuth
-from main.tilt import calculateTilt
+from azimuth import calculateAzimuth
+from tilt import calculateTilt
 
 # Get azimuth based on two nmea points
 def getAzimuth(point1_NMEA, point2_NMEA): 
@@ -29,7 +29,7 @@ def getCorrectAntenna(balloon_rotation, groundstation_direction):
     antennas = [antenna1, antenna2, antenna3, antenna3, antenna4]
     correctAntenna = antenna1["number"]
     for antenna in antennas:
-        if(abs(antenna["degree"] - groundstation_direction) <= closest): # = as, if same distance, choose new antenna
+        if(abs(antenna["degree"] - groundstation_direction) <= closest): # "=" because, if same distance, choose new antenna as balloon moves in rotation of new antenna
             correctAntenna = antenna["number"]
             closest = abs(antenna["degree"] - groundstation_direction)
     return correctAntenna
